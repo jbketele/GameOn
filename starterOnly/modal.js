@@ -96,10 +96,14 @@ form.addEventListener("submit", (event) => {
 
   // Afficher un message de succès si toutes les validations sont passées
   if (isValid) {
+    form.classList.add("success-form")
+    const validate = document.createElement("div");
+    validate.classList.add("success")
     const validateTxt = document.createElement("p");
     validateTxt.textContent = "Merci pour votre inscription !";
     validateTxt.classList.add("success-message");
-    modalBdy.appendChild(validateTxt);
+    modalBdy.appendChild(validate);
+    validate.appendChild(validateTxt);
   }
 });
 
