@@ -30,13 +30,14 @@ modalBtn.forEach((btn) => btn.addEventListener("click", launchModal));
 // launch modal form
 function launchModal() {
   modalbg.style.display = "block";
+  window.scrollTo({ top: 0 })
 }
 
 //Fermer le modal
 closeCross.addEventListener("click", closeModal);
 
 function closeModal() {
-  modalbg.style.display = "none";
+  modalbg.style.removeProperty("display");
 }
 
 // Fonction pour valider le formulaire

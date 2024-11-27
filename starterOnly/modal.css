@@ -72,49 +72,6 @@ img {
   display: none;
 }
 
-@media screen and (max-width: 768px) {
-  .topnav a {
-    display: none;
-  }
-
-  .topnav a.icon {
-    float: right;
-    display: block;
-  }
-}
-
-@media screen and (max-width: 768px) {
-  .topnav.responsive {
-    position: relative;
-  }
-
-  .topnav.responsive .icon {
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-
-  .topnav.responsive a {
-    float: none;
-    display: block;
-    text-align: left;
-  }
-}
-
-
-
-@media screen and (max-width: 540px) {
-  .topnav a {
-    display: none;
-  }
-
-  .topnav a.icon {
-    float: right;
-    display: block;
-    margin-top: -15px;
-  }
-}
-
 main {
   font-size: 130%;
   font-weight: bolder;
@@ -125,8 +82,6 @@ main {
   margin: 1px 20px 15px;
   border-radius: 2rem;
   text-align: justify;
-
-
 }
 
 .modal-btn {
@@ -180,7 +135,7 @@ main {
   height: 100%;
   width: 100%;
   overflow: auto;
-  background-color: rgba(26, 39, 156, 0.4);
+  background-color: white;
 }
 
 .content {
@@ -491,7 +446,7 @@ input[data-error]::after {
 }
 
 .hero-headline {
-  font-size: 6rem;
+  font-size: 5rem;
   font-weight: normal;
   white-space: nowrap;
 }
@@ -541,6 +496,52 @@ footer {
   margin: 0 20px;
 }
 
+@media screen and (max-width: 768px) {
+  .topnav {
+    margin: 6.5%;
+  }
+
+  .topnav a {
+    display: none;
+  }
+
+  .topnav a.icon {
+    float: right;
+    display: block;
+    margin-top: -8px;
+    color: red;
+  }
+
+  .topnav.responsive {
+    position: relative;
+  }
+
+  .topnav.responsive .icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .topnav.responsive a {
+    float: none;
+    display: block;
+    text-align: left;
+  }
+
+  .bground {
+    background-color: transparent;
+  }
+
+  .content {
+    margin: 15% auto;
+  }
+
+  .header-logo img {
+    width: 55%;
+  }
+
+}
+
 @media screen and (max-width: 800px) {
   .hero-section {
     display: block;
@@ -562,7 +563,7 @@ footer {
   }
 
   .hero-headline {
-    font-size: 4.5rem;
+    font-size: 40px;
     white-space: normal;
   }
 
