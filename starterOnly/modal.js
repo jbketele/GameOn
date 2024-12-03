@@ -47,52 +47,78 @@ form.addEventListener("submit", (event) => {
   let isValid = true;
   clearErrors();
 
-  // Vérification du champ "Nom"
-  if (lastname.value.length < 2) {
-    displayError(lastname, "Veuillez entrer au moins 2 caractères.");
-    isValid = false;
+  // Fonction pour afficher un message d'erreur
+  function displayError(element, message) {
+    const error = document.createElement("p");
+    error.textContent = message;
+    error.classList.add("error-message");
+    element.parentElement.appendChild(error);
   }
 
-  // Vérification du champ "Prénom"
-  if (firstname.value.length < 2) {
-    displayError(firstname, "Veuillez entrer au moins 2 caractères.");
-    isValid = false;
+  // Fonction pour effacer les messages d'erreur avant chaque validation
+  function clearErrors() {
+    const errors = document.querySelectorAll(".error-message");
+    errors.forEach((error) => error.remove());
   }
 
-  // Vérification du champ "Email" avec une expression régulière simple
-  if (!validateEmail(email.value)) {
-    displayError(email, "Veuillez entrer une adresse email valide.");
-    isValid = false;
-  }
+  const validations = [
+    {
+      field: lastname,
+      condition: () => lastname.value.length >= 2,
+      errorMessage: "Veuillez entrer au moins 2 caractères."
+    },
+    {
+      field: firstname,
+      condition: () => firstname.value.length >= 2,
+      errorMessage: "Veuillez entrer au moins 2 caractères."
+    },
+    {
+      field: email,
+      condition: () => validateEmail(email.value),
+      errorMessage: "Veuillez entrer une adresse email valide."
+    },
+    {
+      field: birth,
+      condition: () => {
+        const today = new Date();
+        const birthDate = new Date(birth.value);
+        return birth.value !== "" && birthDate <= today;
+      },
+      errorMessage: "Veuillez entrer une date de naissance."
+    },
+    {
+      field: quantityField,
+      condition: () => {
+        const quantityValue = quantityField.value.trim();
+        return quantityValue !== "" && isValidNumber(quantityValue);
+      },
+      errorMessage: "Veuillez entrer un nombre entre 0 et 99."
+    },
+    {
+      field: locationRadios,
+      condition: () => Array.from(locationRadios).some(radio => radio.checked),
+      errorMessage: "Veuillez sélectionner une localisation."
+    },
+    {
+      field: termsCheckbox,
+      condition: () => termsCheckbox.checked,
+      errorMessage: "Vous devez accepter les conditions générales."
+    },
+    {
+      field: notificationsCheckbox,
+      condition: () => notificationsCheckbox.checked,
+      errorMessage: "Veuillez accepter de recevoir des notifications si vous souhaitez les recevoir."
+    },
+  ];
 
-  // Vérification du champ "Date de naissance"
-  if (birth.value === "") {
-    displayError(birth, "Veuillez entrer votre date de naissance.");
-    isValid = false;
-  }
+  validations.forEach(({ field, condition, errorMessage }) => {
+    isValid &= validateField(field, condition(), errorMessage);
+  });
 
-  // Vérification du champ 'quantity' pour un nombre entre 0 et 99
-  const quantityValue = quantityField.value.trim();
-  if (quantityValue === "") {
-    displayError(quantityField, "Veuillez entrer un nombre valide entre 0 et 99");
-    isValid = false;
-  } else if (!isValidNumber(quantityValue)) {
-    displayError(quantityField, "Veuillez entrer un nombre valide entre 0 et 99");
-    isValid = false;
-  }
-
-
-  // Vérification qu'une localisation a été sélectionnée
-  const selectedLocation = Array.from(locationRadios).some(radio => radio.checked);
-  if (!selectedLocation) {
-    displayError(locationRadios[0].parentElement, "Veuillez sélectionner une option");
-    isValid = false;
-  }
-
-  // Vérification de la case des conditions générales
-  if (!termsCheckbox.checked) {
-    displayError(termsCheckbox.parentElement, "Vous devez accepter les conditions générales.");
-    isValid = false;
+  // Fonction pour valider le format de l'e-mail
+  function validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   }
 
   // Afficher un message de succès si toutes les validations sont passées
@@ -107,29 +133,3 @@ form.addEventListener("submit", (event) => {
     validate.appendChild(validateTxt);
   }
 });
-
-// Fonction pour afficher un message d'erreur
-function displayError(element, message) {
-  const error = document.createElement("p");
-  error.textContent = message;
-  error.classList.add("error-message");
-  element.parentElement.appendChild(error);
-}
-
-// Fonction pour effacer les messages d'erreur avant chaque validation
-function clearErrors() {
-  const errors = document.querySelectorAll(".error-message");
-  errors.forEach((error) => error.remove());
-}
-
-// Fonction pour valider le format de l'e-mail
-function validateEmail(email) {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
-}
-
-function isValidNumber(value) {
-  const number = Number(value);
-  return !isNaN(number) && number >= 0 && number <= 99;
-}
-
