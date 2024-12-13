@@ -40,27 +40,40 @@ function closeModal() {
   modalbg.style.removeProperty("display");
 }
 
-// Fonction pour valider le formulaire
+// Fonction pour valider le format de l'e-mail
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+// Fonction pour vérifier si un nombre est valide (entre 0 et 99)
+function isValidNumber(value) {
+  const num = parseInt(value, 10);
+  return num >= 0 && num <= 99;
+}
+
+// Fonction pour effacer les messages d'erreur avant chaque validation
+function clearErrors() {
+  const errors = document.querySelectorAll(".error-message");
+  errors.forEach((error) => error.remove());
+}
+
+// Fonction pour afficher un message d'erreur
+function displayError(element, message) {
+  const error = document.createElement("p");
+  error.textContent = message;
+  error.classList.add("error-message");
+  element.parentElement.appendChild(error);
+}
+
+// Écouteur d'événement pour le formulaire
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
   let isValid = true;
   clearErrors();
 
-  // Fonction pour afficher un message d'erreur
-  function displayError(element, message) {
-    const error = document.createElement("p");
-    error.textContent = message;
-    error.classList.add("error-message");
-    element.parentElement.appendChild(error);
-  }
-
-  // Fonction pour effacer les messages d'erreur avant chaque validation
-  function clearErrors() {
-    const errors = document.querySelectorAll(".error-message");
-    errors.forEach((error) => error.remove());
-  }
-
+  // Validation des champs
   const validations = [
     {
       field: lastname,
@@ -115,17 +128,11 @@ form.addEventListener("submit", (event) => {
     isValid &= validateField(field, condition(), errorMessage);
   });
 
-  // Fonction pour valider le format de l'e-mail
-  function validateEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
-
   // Afficher un message de succès si toutes les validations sont passées
   if (isValid) {
-    form.classList.add("success-form")
+    form.classList.add("success-form");
     const validate = document.createElement("div");
-    validate.classList.add("success")
+    validate.classList.add("success");
     const validateTxt = document.createElement("p");
     validateTxt.textContent = "Merci pour votre inscription !";
     validateTxt.classList.add("success-message");
