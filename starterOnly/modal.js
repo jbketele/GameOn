@@ -60,11 +60,23 @@ function clearErrors() {
 
 // Fonction pour afficher un message d'erreur
 function displayError(element, message) {
+  if (!(element instanceof HTMLElement)) {
+    console.error("L'élément fourni n'est pas un élément DOM :", element);
+    return;
+  }
+
+  const parentElement = element.closest('.formData');
+  if (!parentElement) {
+    console.error("Élément parent introuvable pour :", element);
+    return;
+  }
+
   const error = document.createElement("p");
   error.textContent = message;
   error.classList.add("error-message");
-  element.parentElement.appendChild(error);
+  parentElement.appendChild(error);
 }
+
 
 // Écouteur d'événement pour le formulaire
 form.addEventListener("submit", (event) => {
@@ -77,17 +89,17 @@ form.addEventListener("submit", (event) => {
   const validations = [
     {
       field: lastname,
-      condition: () => lastname.value.length >= 2,
+      condition: function () { lastname.value.length >= 2; },
       errorMessage: "Veuillez entrer au moins 2 caractères."
     },
     {
       field: firstname,
-      condition: () => firstname.value.length >= 2,
+      condition: function () { firstname.value.length >= 2; },
       errorMessage: "Veuillez entrer au moins 2 caractères."
     },
     {
       field: email,
-      condition: () => validateEmail(email.value),
+      condition: function () { validateEmail(email.value); },
       errorMessage: "Veuillez entrer une adresse email valide."
     },
     {
@@ -95,13 +107,20 @@ form.addEventListener("submit", (event) => {
       condition: () => {
         const today = new Date();
         const birthDate = new Date(birth.value);
-        return birth.value !== "" && birthDate <= today;
+
+        if (birthDate === "") {
+          displayError(birth, "Veuillez entrer une date de naissance.")
+        }
+        if (birthDate > today) {
+          displayError(birth, "La date de naissance doit être dans le passé.")
+        }
+        //return birth.value !== "" && birthDate <= today;
       },
       errorMessage: "Veuillez entrer une date de naissance."
     },
     {
       field: quantityField,
-      condition: () => {
+      condition: function () {
         const quantityValue = quantityField.value.trim();
         return quantityValue !== "" && isValidNumber(quantityValue);
       },
@@ -109,24 +128,58 @@ form.addEventListener("submit", (event) => {
     },
     {
       field: locationRadios,
-      condition: () => Array.from(locationRadios).some(radio => radio.checked),
-      errorMessage: "Veuillez sélectionner une localisation."
+      condition: function () {
+        const locationSelected = Array.from(locationRadios).some(function (radio) {
+          return radio.checked;
+        });
+
+        if (!locationSelected) {
+          // Si aucun radio n'est sélectionné, on applique l'erreur à un élément parent
+          const parentElement = locationRadios[0].closest('.formData');
+          if (parentElement) {
+            displayError(parentElement, "Veuillez sélectionner une localisation.");
+          } else {
+            console.error("Élément parent introuvable pour les boutons radio.");
+          }
+          return false; // Condition échouée
+        }
+
+        return true; // Condition réussie
+      }
     },
     {
       field: termsCheckbox,
-      condition: () => termsCheckbox.checked,
+      condition: function () { termsCheckbox.checked; },
       errorMessage: "Vous devez accepter les conditions générales."
     },
     {
       field: notificationsCheckbox,
-      condition: () => notificationsCheckbox.checked,
+      condition: function () { notificationsCheckbox.checked; },
       errorMessage: "Veuillez accepter de recevoir des notifications si vous souhaitez les recevoir."
     },
   ];
 
-  validations.forEach(({ field, condition, errorMessage }) => {
-    isValid &= validateField(field, condition(), errorMessage);
+  validations.forEach(function (validation) {
+    const field = validation.field;
+
+    // Vérification avancée
+    if (!field || (field instanceof NodeList && field.length === 0)) {
+      console.error("Champ de formulaire introuvable :", field);
+      return;
+    }
+
+    if (!validation.condition()) {
+      isValid = false;
+
+      // Gestion des NodeList
+      if (field instanceof NodeList) {
+        displayError(field[0], validation.errorMessage); // Utilisez le premier élément de la liste
+      } else {
+        displayError(field, validation.errorMessage);
+      }
+    }
   });
+
 
   // Afficher un message de succès si toutes les validations sont passées
   if (isValid) {
