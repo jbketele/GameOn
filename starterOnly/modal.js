@@ -96,6 +96,7 @@ form.addEventListener("submit", (event) => {
     {
       field: birth,
       valid: function () {
+        removeError(birth);
 
         if (!birth.value) {
           displayError(birth, "Veuillez entrer une date de naissance valide.");
@@ -109,7 +110,7 @@ form.addEventListener("submit", (event) => {
           displayError(birth, "La date de naissance doit être dans le passé.");
           return false;
         }
-
+        return true;
       },
       message: ""
     },
@@ -132,11 +133,17 @@ form.addEventListener("submit", (event) => {
   ];
 
   validations.forEach(({ field, valid, message }) => {
-    if (!valid && message) {
-      displayError(field, message);
+    const isFieldValid = typeof valid === "function" ? valid() : valid;
+    if (!isFieldValid) {
+      if (message) {
+        displayError(field, message);
+      }
       isValid = false;
+    } else {
+      removeError(field);
     }
   });
+
 
 
   // Afficher un message de succès si toutes les validations sont passées
