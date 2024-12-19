@@ -95,19 +95,25 @@ form.addEventListener("submit", (event) => {
     },
     {
       field: birth,
-      valid: (() => {
+      valid: function () {
+
         if (!birth.value) {
           displayError(birth, "Veuillez entrer une date de naissance valide.");
           return false;
         }
-        if (new Date(birth.value) > new Date()) {
+
+        const birthDate = new Date(birth.value);
+        const today = new Date();
+
+        if (birthDate > today) {
           displayError(birth, "La date de naissance doit être dans le passé.");
           return false;
         }
-        return true;
-      })(),
+
+      },
       message: ""
     },
+
     {
       field: quantityField,
       valid: isValidNumber(quantityField.value.trim()),
