@@ -61,6 +61,7 @@ function displayError(element, message) {
   error.textContent = message;
 }
 
+// Fonction pour supprimer les messages d'erreur
 function removeError(element) {
   const parentElement = element.closest('.formData');
   const error = parentElement.querySelector(".error-message");
@@ -132,8 +133,9 @@ form.addEventListener("submit", (event) => {
     },
   ];
 
+  // Validations de chaque formulaire
   validations.forEach(({ field, valid, message }) => {
-    const isFieldValid = typeof valid === "function" ? valid() : valid;
+    const isFieldValid = typeof valid === "function" ? valid() : valid; //Validation avec une fonction
     if (!isFieldValid) {
       if (message) {
         displayError(field, message);
@@ -159,11 +161,12 @@ form.addEventListener("submit", (event) => {
   }
 });
 
-
+//Enlever les messages d'erreur lors de la correction
 [firstname, lastname, email, birth, quantityField].forEach((field) => {
   field.addEventListener("input", () => removeError(field));
 });
 
+//Suppression du message d'erreur quand une case est cochée
 locationRadios.forEach((radio) => {
   radio.addEventListener("change", () => removeError(locationRadios[0]));
 });
