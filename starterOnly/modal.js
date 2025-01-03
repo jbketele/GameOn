@@ -33,7 +33,15 @@ modalBtn.forEach((btn) => btn.addEventListener("click", () => {
 // Close modal
 closeCross.addEventListener("click", () => {
   modalbg.style.display = "none";
+
+  // Vérifie si le formulaire a été validé
+  if (form.classList.contains("success-form")) {
+    form.classList.remove("success-form"); // Supprime l'indicateur de validation
+    modalBdy.querySelectorAll(".success").forEach((success) => success.remove()); // Supprime le message de succès
+    form.reset();
+  }
 });
+
 
 
 // Fonction pour valider le format de l'e-mail
@@ -81,12 +89,12 @@ form.addEventListener("submit", (event) => {
   const validations = [
     {
       field: firstname,
-      valid: firstname.value.length >= 2,
+      valid: firstname.value.length >= 2 && !firstname.value.includes(" "),
       message: "Veuillez entrer au moins 2 caractères."
     },
     {
       field: lastname,
-      valid: lastname.value.length >= 2,
+      valid: lastname.value.length >= 2 && !lastname.value.includes(" "),
       message: "Veuillez entrer au moins 2 caractères."
     },
     {
@@ -158,6 +166,7 @@ form.addEventListener("submit", (event) => {
     validateTxt.classList.add("success-message");
     modalBdy.appendChild(validate);
     validate.appendChild(validateTxt);
+    form.reset();
   }
 });
 
@@ -172,4 +181,3 @@ locationRadios.forEach((radio) => {
 });
 
 termsCheckbox.addEventListener("change", () => removeError(termsCheckbox));
-notificationsCheckbox.addEventListener("change", () => removeError(notificationsCheckbox));
