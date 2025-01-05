@@ -89,12 +89,12 @@ form.addEventListener("submit", (event) => {
   const validations = [
     {
       field: firstname,
-      valid: firstname.value.length >= 2 && !firstname.value.includes(" "),
+      valid: firstname.value.trim().length >= 2,
       message: "Veuillez entrer au moins 2 caractères."
     },
     {
       field: lastname,
-      valid: lastname.value.length >= 2 && !lastname.value.includes(" "),
+      valid: lastname.value.trim().length >= 2,
       message: "Veuillez entrer au moins 2 caractères."
     },
     {
